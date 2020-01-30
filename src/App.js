@@ -8,12 +8,12 @@ function App() {
   const [newTaskName, setNewTaskName] = React.useState()
 
   React.useEffect(()=>{
-    const fetchData= async()=>{
-      const db = firebase.firestore()
-      const data = await db.collection("tasks").get()
-      setTasks(data.docs.map(doc => ({...doc.data(), id: doc.id})))
-    }
-    fetchData()
+    const db = firebase.firestore()
+    return db.collection('tasks').onSnapshot((snapshot)=>{
+      const tasksData = []
+      snapshot.forEach(doc=>tasksData.push(({...doc.data(), id: doc.id})))
+      setTasks(tasksData)
+    })
   },[])
 
   const onCreate=()=>{
